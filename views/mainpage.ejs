@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+</head>
+<body>
+    <h2>Welcome to Whatsup</h2>
+    <h3>
+        <% if(typeof realUser !== 'undefined')
+        {
+            %>
+            <%=realUser%>
+            <%
+        }
+        %>
+    <form class="example" method="POST" >
+        <input type="text" placeholder="Search.." name="search">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="w3-container">
+        <ul class="w3-ul w3-card-4">
+            
+                    <%
+                    if(typeof user !== 'undefined')
+                    {
+                        user.forEach(element => {
+                            %>
+                            <li class="w3-bar">
+                            <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
+                            <img src="img_avatar2.png" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+                            <div class="w3-bar-item">
+                                <span class="w3-large" onclick="fun()">
+                                <%= element.name %> 
+                            </span><br>
+                            </div>
+                            </li>
+                            <%
+                        });
+                    }
+                    %>
+                
+          </ul>
+    </div>
+    
+</body>
+</html>
+<script>
+    function fun()
+    {
+        alert("helo")
+        location.href = '/chatPage'
+    }
+    </script>

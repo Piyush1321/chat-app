@@ -1,0 +1,188 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  </script>
+    <link rel="stylesheet" href="css/home.css">
+    <title>Document</title>  
+</head>
+<body>
+    
+    <div class="main-wrapper">
+        <div class="form">
+            <div class="login-signup">
+                <div id='login' class="upper-button">
+                    <label  class="switch-button">Login</label>
+                </div>
+                <div id='Register' class="upper-button">
+                    <label  class="switch-button">Register</label>
+                </div> 
+            </div>
+            <div class="login-wrapper">
+                <form  class="login-form" method="POST">
+                    <div>
+                        <label for="user-email">Email/UserName:   </label> <br>
+                        <input type="text" name="email" id="user-email" required autocomplete="off" class="input-field"> <br>
+                    </div>
+                    <div>
+                        <label for="user-password">Password:</label> <br>
+                        <input type="Password" name="" id="user-password" required class="input-field"><br><br>
+                    </div>
+                    <div>
+                        <button type="submit" class="submit-button">Login</button> 
+                        <button type="reset" class="submit-button">Reset</button>
+                    </div>
+                </form>
+            </div>
+            <div class="register-wrapper">
+                <form  class="register-class">
+                    <div>
+                        <label for="user-name">Name:</label><br>
+                        <input type="text" name="user-name" id="user-name" class="input-field" required><br>
+                    </div>
+                        <div class="error1" id="errors"></div>
+                    <div>
+                        <label for="user-RegisterEmail">Email:   </label> <br>
+                        <input type="email" name="email" id="user-RegisterEmail" class="input-field" required> <br>
+                    </div>
+                    <div class="error2" id="errors" ></div>
+                    <div>
+                        <label for="user-RegisterPassword">Password: </label><br>
+                        <input type="Password" name="userPassword" id="user-RegisterPassword" class="input-field"><br>
+                    </div>
+                        <div class="error3" id="errors"></div>
+                    <div>
+                        <label for="confirm-password">Confirm-Password: </label><br>
+                        <input type="Password" name="confirm-password" id="confirm-password" class="input-field"><br><br>
+                    </div>
+                    <div class="error4" id="errors"></div>
+                    <div>
+                        <button type="button" class="submit-button">Register</button>  
+                    </div>
+                </form>
+            </div>
+        </div>
+    <div>
+    
+</body>
+</html>
+<script>
+
+    $( document ).ready(function() {
+        $('.register-wrapper').hide();
+    });
+
+    $("#login").on('click',function(){
+        $('.login-wrapper').show();
+        $('.register-wrapper').hide();
+        $("#login").css("background-color", "#1dd1a1");
+        $("#Register").css("background-color", "#95a5a6");
+    })
+
+    $("#Register").on('click',function(){
+        
+        $('.login-wrapper').hide();
+        $('.register-wrapper').show();
+        $("#login").css("background-color", " #95a5a6");
+        $("#Register").css("background-color", "#1dd1a1");
+    })
+    var PasswordMatched = 0;
+    $('#confirm-password').on('input',function(){
+        var pass = $('#user-RegisterPassword').val();
+        var confirmPass = $('#confirm-password').val();
+
+        if(pass == confirmPass)
+        {
+            $('#user-RegisterPassword').css("border-color","green");
+            $('#confirm-password').css("border-color","green");
+            PasswordMatched = 1;
+        }
+        else{
+            $('#user-RegisterPassword').css("border-color","red");
+            $('#confirm-password').css("border-color","red");
+            PasswordMatched = 0;
+        }
+    })
+
+    $('#user-RegisterPassword').on('input',function(){
+
+
+        var pass = $('#user-RegisterPassword').val();
+        var confirmPass = $('#confirm-password').val();
+        if($.trim(confirmPass).length>1)
+        {
+            if(pass == confirmPass)
+            {
+                $('#user-RegisterPassword').css("border-color","green");
+                $('#confirm-password').css("border-color","green");
+                PasswordMatched = 1;
+            }
+            else{
+                $('#user-RegisterPassword').css("border-color","red");
+                $('#confirm-password').css("border-color","red");
+                PasswordMatched = 0;
+            }
+
+        }
+
+        
+    })
+
+        $('.submit-button').click(() =>
+        {
+            if($('#user-RegisterPassword').css("border-color","green"))
+
+            var userdata = {
+                name : $('#user-name').val(),
+                email :  $('#user-RegisterEmail').val(),
+                password : $('#user-RegisterPassword').val(),
+                confirmPassword : $('#confirm-password').val(),
+                PasswordMatched 
+            }
+
+                    $.ajax({
+                        url: '/register',
+                        type: 'POST',
+                        dataType: 'html',
+
+                        success: function (msg) {
+                
+                        },
+                        complete : (res) => {
+                           var data = res.responseText
+                           data = JSON.parse(data)
+                           if(data.success == 200)
+                           {
+                               location.href = '/emailCheck'
+                           }
+                           else
+                           {
+                               let err = data.error 
+                               err.forEach(msg => {
+                                   alert(msg)
+                                   if(msg == 'Invaild name')
+                                   {
+                                        $('.error1').html(msg)
+                                   }
+                                   else if(msg == 'Invalid Email' || msg == 'Email Already Registered')
+                                   {
+                                        $('.error2').html(msg)
+                                   }
+                                   else if(msg == 'Passoword must contain 5 character')
+                                   {
+                                        $('.error3').html(msg)
+                                   }
+                                   else if(msg == 'Password Not Matched')
+                                   {
+                                        $('.error4').html(msg)
+                                   }
+                               });
+                           }
+
+                        },
+                        data: userdata
+                })
+
+        })
+  </script>
+
